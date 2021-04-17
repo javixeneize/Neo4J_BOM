@@ -26,7 +26,7 @@ It also requires the name of the project to install and optionally the path to t
 
 ### Visualisations
 
-![](/Users/javidr/javi/python/Neo4J_BOM/images/neo4j_display.png)
+![](images/neo4j_display.png)
 
 ### Next steps
 
