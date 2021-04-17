@@ -1,6 +1,7 @@
 from neo4j import GraphDatabase
 import get_dc_data
 import os
+import click
 
 
 def ingest_project(project):
@@ -64,14 +65,28 @@ def create_project_relations():
     ''')
 
 
-project = 'testjavi'
-deps, vulns = get_dc_data.get_depcheck_data(project=project)
-driver = GraphDatabase.driver(os.environ.get('NEO4J_DB'),
-                              auth=(os.environ.get('NEO4J_USER'), os.environ.get('NEO4J_PWD')))
-tx = driver.session()
-ingest_project(project)
-ingest_dependencies(deps, project)
-ingest_vulns(vulns)
-create_vuln_relations()
-create_project_relations()
-driver.close()
+@click.command()
+@click.argument('project', required=True)
+@click.argument('file', required=False)
+def run_cli_scan(project, file):
+    if not file:
+        file = 'dependency-check-report.json'
+    project = project
+    deps, vulns = get_dc_data.get_depcheck_data(project, file)
+    if deps:
+        ingest_project(project)
+        ingest_dependencies(deps, project)
+        ingest_vulns(vulns)
+        create_vuln_relations()
+        create_project_relations()
+        print("Data successfully ingested in Neo4J")
+    else:
+        print("No data has been ingested")
+
+
+if __name__ == "__main__":
+    driver = GraphDatabase.driver(os.environ.get('NEO4J_DB'),
+                                  auth=(os.environ.get('NEO4J_USER'), os.environ.get('NEO4J_PWD')))
+    tx = driver.session()
+    run_cli_scan()
+    driver.close()

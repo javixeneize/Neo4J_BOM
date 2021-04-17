@@ -60,7 +60,12 @@ def get_dc_data(dependencies, project):
     return dependency_list, vuln_list
 
 
-def get_depcheck_data(project, file='dependency-check-report.json'):
-    with open(file) as f:
-        dependencies = json.loads(f.read()).get('dependencies')
-    return get_dc_data(dependencies, project)
+def get_depcheck_data(project, file):
+    try:
+        with open(file) as f:
+            dependencies = json.loads(f.read()).get('dependencies')
+            return get_dc_data(dependencies, project)
+
+    except FileNotFoundError:
+        print("File {} not found".format(file))
+        return None, None
