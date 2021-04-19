@@ -22,9 +22,24 @@ It also requires the name of the project to install and optionally the path to t
 
 
 
-### Code explained
-
 ### Visualisations
+
+
+
+The ingestion generates three different nodes, which are
+
+- Project
+- Dependency
+- Vulnerability
+
+It also generates two relations:
+
+- Project-Uses->Dependency
+- Dependency-Vulnerable_to->Vulnerability
+
+
+
+Different visualisations can be generated with this data, as which vulnerabilities affect to which projects, have a complete bill of materials or just show the data for a given project, as displayed below:
 
 ![](images/neo4j_display.png)
 
